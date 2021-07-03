@@ -10,11 +10,11 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { trainStations } from "../MapContainer/train_stations";
 import TextField from "@material-ui/core/TextField";
 import Context from "../../store/Context";
+
 const NavBar = () => {
-   const [state, setState] = React.useState({
-      isOpen: false,
-   });
+   const [isOpen, setIsOpen] = React.useState(false);
    const context = useContext(Context);
+
    const onSearch = (e) => {
       const trainName = e.target.innerText;
       const trainObj = trainStations.filter(
@@ -95,10 +95,9 @@ const NavBar = () => {
 
    return (
       <Container>
-         <>
             <Button
                onClick={() => {
-                  setState({ isOpen: true });
+                  setIsOpen(true);
                }}
                style={{ padding: "0" }}
             >
@@ -109,18 +108,18 @@ const NavBar = () => {
                </OpenBtn>
             </Button>
             <Drawer
-               open={state.isOpen}
+               open={isOpen}
                onClose={() => {
-                  setState({ isOpen: false });
+                  setIsOpen(false);
                }}
                root={{ position: "absolute", left: 0 }}
             >
                {list()}
             </Drawer>
-         </>
       </Container>
    );
 };
+
 const Container = styled.div`
    position: relative;
    .MuiButton-root {
@@ -162,17 +161,7 @@ const ShowBy = styled.div`
    direction: rtl;
    margin: 2rem 1rem;
 `;
-const CheckBox = styled.div`
-   margin-top: 1rem;
-   direction: rtl;
-   input {
-      margin: 0 1rem;
-   }
-`;
-const CheckBoxes = styled.div`
-   display: flex;
-   flex-direction: row-reverse;
-`;
+
 const Search = styled.div`
    label {
       direction: rtl !important;
@@ -192,13 +181,5 @@ const Search = styled.div`
       }
    }
 `;
-const SearchInput = styled.select`
-   direction: rtl;
-   text-align: center;
-   height: 2rem;
-   width: 12rem;
-   border-radius: 0.3rem;
-   border: 1px solid black;
-   outline: none;
-`;
+
 export default NavBar;

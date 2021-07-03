@@ -49,7 +49,6 @@ const GlobalContainer = styled.div`
    z-index: 1;
    right: 0.5rem;
    top: 0.5rem;
-   /* border: 1px solid black; */
    padding: 0.2rem;
    border-radius: 0.2rem;
    background-color: rgb(63, 81, 181);
