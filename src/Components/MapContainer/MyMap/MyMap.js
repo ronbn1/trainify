@@ -2,10 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 
-import L from "leaflet";
+import L, { divIcon } from "leaflet";
 import { TileLayer, Marker, Popup, useMapEvents, useMap } from "react-leaflet";
 import { trainStations } from "../train_stations";
 import Context from "../../../store/Context";
+import { renderToStaticMarkup } from "react-dom/server";
+
 const zoomedOutMarkers = [
    {
       name: "מכרז",
@@ -31,6 +33,16 @@ const MarkersMap = () => {
    const map = useMap();
    const [mapZoom, setMapZoom] = useState(map.getZoom());
 
+   const iconMarkup = renderToStaticMarkup(
+      <i
+         className=" fas fa-train"
+         style={{ fontSize: "1.5rem", color: "#262A53" }}
+      />
+   );
+   const customMarkerIcon = divIcon({
+      html: iconMarkup,
+   });
+
    map.on("zoomend", () => {
       setMapZoom(map.getZoom());
    });
@@ -48,7 +60,6 @@ const MarkersMap = () => {
          map.flyTo([context.goCenter[0], context.goCenter[1]], 8);
    }, [context.goCenter]);
 
-
    const handleCenterClick = (item) => {
       map.flyTo(
          [item.geometry.coordinates[1], item.geometry.coordinates[0]],
@@ -60,6 +71,7 @@ const MarkersMap = () => {
       const markers = zoomedOutMarkers.map((item, index) => {
          return (
             <Marker
+               icon={customMarkerIcon}
                key={uuidv4()}
                position={[
                   parseFloat(item.geometry.coordinates[1]),
@@ -78,6 +90,7 @@ const MarkersMap = () => {
    const renderIsraelMarker = () => {
       return (
          <Marker
+            icon={customMarkerIcon}
             key={uuidv4()}
             position={[32.168566019799705, 34.82490206582461]}
             eventHandlers={{
@@ -99,6 +112,7 @@ const MarkersMap = () => {
             ? trainStations.map((item, index) => {
                  return (
                     <Marker
+                       icon={customMarkerIcon}
                        key={uuidv4()}
                        position={[
                           parseFloat(item.geometry.coordinates[1]),
@@ -130,16 +144,21 @@ const MarkersMap = () => {
                                 direction: "ltr",
                              }}
                           >
-                             {item.properties.direct_destination.map((d) => (
-                                <p
-                                   style={{
-                                      textAlign: "right",
-                                      margin: "1px",
-                                   }}
-                                >
-                                   {` ${d} `}
-                                </p>
-                             ))}
+                             {console.log(
+                                item.properties.direct_destination.sort()
+                             )}
+                             {item.properties.direct_destination
+                                .sort()
+                                .map((d) => (
+                                   <p
+                                      style={{
+                                         textAlign: "right",
+                                         margin: "1px",
+                                      }}
+                                   >
+                                      {` ${d} `}
+                                   </p>
+                                ))}
                           </div>
                        </Popup>
                     </Marker>
@@ -152,7 +171,4 @@ const MarkersMap = () => {
    );
 };
 
-
-
 export default MarkersMap;
-

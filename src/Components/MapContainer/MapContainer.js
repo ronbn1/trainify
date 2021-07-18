@@ -24,7 +24,7 @@ export const MyMapContainer = () => {
             zoomControl={false}
          >
             <MarkersMap />
-            <GeoJSON data={rails} style={{ color: "black" }} />
+            <GeoJSON data={rails} style={{ color: "#787A91" }} />
          </MapContainerStyled>
       </>
    );
